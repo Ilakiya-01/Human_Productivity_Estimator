@@ -4,20 +4,24 @@ import pickle
 
 app = Flask(__name__)
 
-# Load model and scaler
-model = pickle.load(open("model.pkl", "rb"))
-scaler = pickle.load(open("scaler.pkl", "rb"))
+
+try:
+    model = pickle.load(open("model.pkl", "rb"))
+    scaler = pickle.load(open("scaler.pkl", "rb"))
+except Exception as e:
+    print("ERROR loading model/scaler:", str(e))
+
 
 @app.route('/', methods=['GET'])
 def home():
-    return "✅ Human Productivity Estimator is Live!"
+    return "Human Productivity Estimator is Live!"
 
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
         data = request.get_json()
 
-        features = np.array([[
+        features = np.array([[ 
             data['Sleep_Hours'],
             data['Start_Work_Hour'],
             data['Total_Work_Hours'],
@@ -35,7 +39,9 @@ def predict():
         return jsonify({'productivity_score': round(prediction, 2)})
 
     except Exception as e:
+        print("ERROR in /predict:", str(e))
         return jsonify({'error': str(e)})
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

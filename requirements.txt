@@ -1,5 +1,8 @@
 flask
-numpy
-scikit-learn
 flask-cors
 gunicorn
+pandas
+numpy
+scikit-learn
+xgboost
+lightgbm
